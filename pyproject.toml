@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "havoc-monkey"
-version = "0.1.0"
+version = "0.1.1"
 description = "Deliberate failure injection for data pipelines"
 readme = "README.md"
 license = {text = "MIT"}
