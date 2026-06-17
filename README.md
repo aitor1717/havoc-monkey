@@ -4,7 +4,7 @@
 [![PyPI](https://img.shields.io/pypi/v/havoc-monkey)](https://pypi.org/project/havoc-monkey/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-> Deliberate failure injection for data pipelines.
+![HTML output of a havoc-monkey campaign report](docs/assets/html_report.png)
 
 ## Why
 
@@ -36,8 +36,6 @@ report = monkey.campaign(
 )
 print(report)
 ```
-
-![HTML output of a havoc-monkey campaign report](docs/assets/html_report.png)
 
 ## Attacks
 
