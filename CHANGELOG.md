@@ -2,7 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.1.0] - Unreleased
+## [0.1.1] - 2026-06-17
+
+### Changed
+- `Report.to_html()` footer redesigned to match the docs site's footer band (thinner, no icons, `havoc-monkey · MIT`)
+
+### Fixed
+- Grammatical run-ons (comma splices) left over from an earlier em-dash cleanup pass, across the README and docs site
+
+## [0.1.0] - 2026-06-17
 
 ### Added
 - Six attacks: `null_flood`, `volume_shock`, `type_coerce`, `schema_drift`, `outlier_inject`, `temporal`
