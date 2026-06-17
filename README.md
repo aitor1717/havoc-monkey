@@ -37,6 +37,8 @@ report = monkey.campaign(
 print(report)
 ```
 
+![HTML output of a havoc-monkey campaign report](docs/assets/html_report.png)
+
 ## Attacks
 
 | Attack | What | Subtypes / Params |

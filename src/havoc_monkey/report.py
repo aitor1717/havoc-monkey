@@ -216,7 +216,7 @@ class Report:
   .header h1{{font-size:36px;font-weight:800;letter-spacing:-.03em;color:#fff;margin-bottom:6px;}}
   .header .sub{{font-family:var(--mono);font-size:13px;color:rgba(255,255,255,.8);}}
   .stats{{display:flex;gap:32px;margin-top:20px;flex-wrap:wrap;}}
-  .stat{{background:rgba(255,255,255,.18);backdrop-filter:blur(6px);border-radius:10px;
+  .stat{{background:rgba(30,30,30,.35);backdrop-filter:blur(6px);border-radius:10px;
     padding:12px 20px;color:#fff;}}
   .stat .val{{font-size:28px;font-weight:800;line-height:1;}}
   .stat .lbl{{font-size:11px;opacity:.75;margin-top:2px;font-family:var(--mono);letter-spacing:.08em;}}
