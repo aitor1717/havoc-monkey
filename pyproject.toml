@@ -1,0 +1,37 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "havoc-monkey"
+version = "0.1.0"
+description = "Deliberate failure injection for data pipelines"
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.9"
+keywords = ["data", "testing", "chaos-engineering", "pipelines", "ml"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Developers",
+  "Topic :: Software Development :: Testing",
+  "Programming Language :: Python :: 3",
+]
+dependencies = ["pandas>=1.5", "numpy>=1.23", "click>=8.0"]
+
+[project.optional-dependencies]
+dev = ["pytest>=7", "pytest-cov", "hatchling"]
+
+[project.entry-points."pytest11"]
+havoc-monkey = "havoc_monkey.plugin"
+
+[project.scripts]
+havoc-monkey = "havoc_monkey.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/havoc_monkey"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = [
+  "havoc_monkey: run a havoc-monkey campaign against the test's health check",
+]

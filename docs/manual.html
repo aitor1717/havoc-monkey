@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manual · havoc-monkey</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --peach:#FBC990; --coral:#F9787C; --pink:#FA0A6C;
+    --teal:#14C2C4; --mint:#3DF2CC;
+    --charcoal:#1E1E1E; --cream:#FFFBF5; --muted:#9E9A96;
+    --sans:'Space Grotesk',sans-serif; --mono:'IBM Plex Mono',monospace;
+    --code-kw:#6DF5D6; --code-str:#FBAAAC; --code-num:#FCD5A6; --code-cmt:#919190;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{font-family:var(--sans);background:var(--cream);color:var(--charcoal);line-height:1.6;overflow-x:hidden;}
+  #dots{position:fixed;inset:0;pointer-events:none;z-index:0;}
+
+  /* NAV */
+  .nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;
+    padding:20px 60px;backdrop-filter:blur(16px);background:rgba(255,251,245,.75);}
+  .logo{font-weight:800;font-size:19px;letter-spacing:-.02em;text-decoration:none;color:var(--charcoal);}
+  .logo em{color:var(--pink);font-style:normal;}
+  .nav-links a{color:var(--charcoal);text-decoration:none;font-size:14px;font-weight:500;margin-left:28px;opacity:.6;}
+  .nav-links a:hover,.nav-links a.active{opacity:1;}
+
+  /* PAGE HEADER */
+  .page-header{position:relative;z-index:1;
+    background:linear-gradient(155deg, var(--peach) 0%, var(--coral) 55%, var(--pink) 100%);
+    padding:72px 60px 80px;}
+  .page-header .eyebrow{font-family:var(--mono);font-size:12px;color:rgba(255,255,255,.65);
+    letter-spacing:.16em;text-transform:uppercase;margin-bottom:14px;}
+  .page-header h1{font-size:52px;font-weight:800;letter-spacing:-.03em;color:#fff;
+    text-shadow:0 2px 30px rgba(26,26,46,.12);margin-bottom:12px;}
+  .page-header p{font-size:17px;color:rgba(255,255,255,.82);max-width:520px;}
+
+  /* LAYOUT */
+  .page-body{position:relative;z-index:1;display:grid;grid-template-columns:220px 1fr;
+    max-width:1100px;margin:0 auto;padding:60px 60px 100px;gap:60px;align-items:start;}
+
+  /* TOC */
+  .toc{position:sticky;top:80px;}
+  .toc h3{font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;
+    color:var(--muted);margin-bottom:14px;}
+  .toc a{display:block;font-size:13.5px;color:var(--muted);text-decoration:none;
+    padding:5px 0;border-left:2px solid transparent;padding-left:12px;transition:all .15s;}
+  .toc a:hover{color:var(--charcoal);border-left-color:var(--coral);}
+  .toc a.sub{font-size:12.5px;padding-left:24px;color:#BCBAB8;}
+  .toc a.sub:hover{color:var(--muted);}
+
+  /* CONTENT */
+  .content section{margin-bottom:72px;}
+  .content h2{font-size:28px;font-weight:800;letter-spacing:-.02em;margin-bottom:8px;
+    padding-top:8px;border-top:2px solid rgba(30,30,30,.07);padding-bottom:16px;}
+  .content h3{font-size:17px;font-weight:700;margin:32px 0 10px;}
+  .content p{font-size:15px;color:#4A4845;margin-bottom:14px;line-height:1.7;}
+  .content p:last-child{margin-bottom:0;}
+  .content ul{margin:10px 0 14px 0;padding-left:0;list-style:none;}
+  .content ul li{font-size:14.5px;color:#4A4845;padding:4px 0 4px 18px;position:relative;}
+  .content ul li::before{content:'·';position:absolute;left:6px;color:var(--teal);font-weight:700;}
+  ic{font-family:var(--mono);font-size:13px;background:rgba(20,194,196,.1);
+    color:var(--teal);padding:2px 7px;border-radius:4px;}
+
+  /* PARAMS TABLE */
+  .param-table{width:100%;border-collapse:collapse;font-size:13.5px;margin:16px 0 24px;}
+  .param-table th{text-align:left;font-family:var(--mono);font-size:11px;color:var(--muted);
+    text-transform:uppercase;letter-spacing:.1em;padding:8px 12px;border-bottom:1px solid rgba(30,30,30,.1);}
+  .param-table td{padding:12px 12px;border-bottom:1px solid rgba(30,30,30,.06);vertical-align:top;}
+  .param-table td:first-child{font-family:var(--mono);font-size:13px;color:var(--teal);white-space:nowrap;}
+  .param-table td.type{font-family:var(--mono);font-size:12.5px;color:var(--muted);}
+  .param-table td.desc{color:#4A4845;font-size:13.5px;}
+
+  /* CODE */
+  .dark-card{background:var(--charcoal);border-radius:16px;padding:26px 28px;
+    font-family:var(--mono);font-size:13px;line-height:1.8;overflow-x:auto;margin:16px 0 0;
+    box-shadow:0 12px 36px -12px rgba(30,30,30,.4);}
+  .dark-card pre{color:#D4D0CB;}
+  .dark-card .k{color:var(--code-kw);} .dark-card .s{color:var(--code-str);}
+  .dark-card .n{color:var(--code-num);} .dark-card .c{color:var(--code-cmt);}
+
+  /* FOOTER */
+  footer{position:relative;z-index:1;background:var(--charcoal);padding:22px 60px;
+    display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;
+    border-top:1px solid rgba(255,255,255,.08);}
+  footer .ft{font-size:12px;color:rgba(255,255,255,.4);font-family:var(--mono);}
+  .social-icons{display:flex;gap:10px;align-items:center;}
+  .social-icon{width:28px;height:28px;border:1px solid rgba(255,255,255,.18);border-radius:50%;
+    display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.55);
+    transition:all .2s;}
+  .social-icon:hover{border-color:var(--mint);color:var(--mint);}
+  .social-icon svg{width:13px;height:13px;fill:currentColor;}
+
+  @media(max-width:900px){
+    .page-body{grid-template-columns:1fr;padding:40px 24px 80px;}
+    .toc{display:none;}
+    .nav,.page-header,footer{padding-left:24px;padding-right:24px;}
+    .page-header h1{font-size:36px;}
+    footer{flex-direction:column;align-items:flex-start;}
+  }
+</style>
+</head>
+<body>
+<canvas id="dots"></canvas>
+
+<nav class="nav">
+  <a href="index.html" class="logo">havoc<em>-monkey</em></a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="examples.html">Examples</a>
+    <a href="manual.html" class="active">Manual</a>
+    <a href="https://github.com/aitor1717/havoc-monkey">GitHub</a>
+  </div>
+</nav>
+
+<div class="page-header">
+  <div class="eyebrow">Manual</div>
+  <h1>API Reference</h1>
+  <p>attacks · campaign · report · pytest plugin · CLI</p>
+</div>
+
+<div class="page-body">
+
+  <!-- TOC -->
+  <nav class="toc">
+    <h3>Contents</h3>
+    <a href="#havoc-monkey-class">HavocMonkey</a>
+    <a href="#context-manager" class="sub">Context manager</a>
+    <a href="#attacks">Attacks</a>
+    <a href="#null-flood" class="sub">null_flood</a>
+    <a href="#volume-shock" class="sub">volume_shock</a>
+    <a href="#type-coerce" class="sub">type_coerce</a>
+    <a href="#schema-drift" class="sub">schema_drift</a>
+    <a href="#outlier-inject" class="sub">outlier_inject</a>
+    <a href="#temporal" class="sub">temporal</a>
+    <a href="#campaign">campaign()</a>
+    <a href="#health-check">health_check</a>
+    <a href="#report">Report</a>
+    <a href="#report-export" class="sub">Export</a>
+    <a href="#pytest-plugin">Pytest Plugin</a>
+    <a href="#cli">CLI</a>
+  </nav>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <section id="havoc-monkey-class">
+      <h2>HavocMonkey</h2>
+      <p>The main class. All attacks and the campaign runner live on this object. Instantiate once per test run and reuse it: the RNG state carries through, so the same seed always produces the same sequence of attacks.</p>
+      <div class="dark-card"><pre><span class="c">from</span> havoc_monkey <span class="c">import</span> HavocMonkey
+
+monkey = HavocMonkey(seed=<span class="n">42</span>)</pre></div>
+      <table class="param-table" style="margin-top:24px;">
+        <tr><th>Parameter</th><th>Type</th><th>Description</th></tr>
+        <tr><td>seed</td><td class="type">int | None</td><td class="desc">Seed for <ic>np.random.default_rng</ic>. Set this in CI so results are reproducible. If <ic>None</ic>, a random seed is used and each run will differ.</td></tr>
+        <tr><td>verbose</td><td class="type">bool</td><td class="desc">Reserved for future use. Currently has no effect on output.</td></tr>
+      </table>
+      <p>After a campaign, the last report is available on <ic>monkey.last_report</ic>, useful for inspecting results outside the return value.</p>
+
+      <h3 id="context-manager">Context manager</h3>
+      <p>HavocMonkey supports the context manager protocol. The instance is returned as-is on enter; exit is a no-op. This is useful when you want to be explicit about the scope of a monkey's lifetime.</p>
+      <div class="dark-card"><pre><span class="c">with</span> HavocMonkey(seed=<span class="n">42</span>) <span class="c">as</span> monkey:
+    attacked = monkey.null_flood(df, cols=[<span class="s">'amount'</span>])
+    report = monkey.campaign(df, attacks=[<span class="s">'null_flood'</span>, <span class="s">'schema_drift'</span>], health_check=check)
+
+<span class="c">print</span>(report)  <span class="c"># still accessible outside the block</span></pre></div>
+    </section>
+
+    <section id="attacks">
+      <h2>Attacks</h2>
+      <p>Every attack takes a DataFrame, applies the failure to a copy, and returns that copy. The original DataFrame is never mutated. Each attack is available as a method on the <ic>HavocMonkey</ic> instance.</p>
+      <p>In a campaign, each attack runs against the <strong>original</strong> DataFrame, not the output of the previous attack. This keeps each result clean: one failure mode, measured in isolation.</p>
+
+      <h3 id="null-flood">null_flood</h3>
+      <p>Injects nulls into the specified columns. Rows are chosen at random according to the seed.</p>
+      <table class="param-table">
+        <tr><th>Parameter</th><th>Type</th><th>Description</th></tr>
+        <tr><td>df</td><td class="type">DataFrame</td><td class="desc">Input DataFrame.</td></tr>
+        <tr><td>cols</td><td class="type">list[str]</td><td class="desc">Columns to inject nulls into.</td></tr>
+        <tr><td>pct</td><td class="type">float</td><td class="desc">Proportion of rows to null out, per column. Default <ic>0.10</ic>.</td></tr>
+      </table>
+      <div class="dark-card"><pre>attacked = monkey.null_flood(df, cols=[<span class="s">'amount'</span>, <span class="s">'score'</span>], pct=<span class="n">0.15</span>)</pre></div>
+
+      <h3 id="volume-shock">volume_shock</h3>
+      <p>Alters the number of rows. Tests whether your pipeline handles empty batches, unexpected overflow, or truncated partials.</p>
+      <table class="param-table">
+        <tr><th>Parameter</th><th>Type</th><th>Description</th></tr>
+        <tr><td>attack</td><td class="type">str</td><td class="desc"><ic>'empty'</ic> returns zero rows with the original schema intact, <ic>'overflow'</ic> repeats rows to reach <ic>factor×</ic> the original size, <ic>'truncate'</ic> keeps only the first <ic>ratio</ic> of rows.</td></tr>
+        <tr><td>factor</td><td class="type">float</td><td class="desc">Overflow multiplier. Default <ic>10.0</ic>.</td></tr>
+        <tr><td>ratio</td><td class="type">float</td><td class="desc">Truncation ratio (0–1). Default <ic>0.5</ic>.</td></tr>
+      </table>
+      <div class="dark-card"><pre>monkey.volume_shock(df, attack=<span class="s">'empty'</span>)
+monkey.volume_shock(df, attack=<span class="s">'overflow'</span>, factor=<span class="n">5.0</span>)
+monkey.volume_shock(df, attack=<span class="s">'truncate'</span>, ratio=<span class="n">0.1</span>)</pre></div>
+
+      <h3 id="type-coerce">type_coerce</h3>
+      <p>Silently changes the dtype of a single column without renaming it. Mimics what happens when an upstream team loosens their schema or changes a serialisation format.</p>
+      <table class="param-table">
+        <tr><th>Parameter</th><th>Type</th><th>Description</th></tr>
+        <tr><td>col</td><td class="type">str</td><td class="desc">Column to coerce.</td></tr>
+        <tr><td>target</td><td class="type">str</td><td class="desc">Target dtype: <ic>'str'</ic>, <ic>'int'</ic>, <ic>'float'</ic>, or <ic>'bool'</ic>. Passing any other value raises a <ic>ValueError</ic> with the valid options listed.</td></tr>
+      </table>
+      <div class="dark-card"><pre>monkey.type_coerce(df, col=<span class="s">'amount'</span>, target=<span class="s">'str'</span>)
+monkey.type_coerce(df, col=<span class="s">'count'</span>, target=<span class="s">'float'</span>)</pre></div>
+
+      <h3 id="schema-drift">schema_drift</h3>
+      <p>Modifies the column structure. The most common production failure in multi-team pipelines: someone renames or drops a column without telling you.</p>
+      <table class="param-table">
+        <tr><th>Parameter</th><th>Type</th><th>Description</th></tr>
+        <tr><td>attack</td><td class="type">str</td><td class="desc"><ic>'drop'</ic> removes a column. <ic>'rename'</ic> renames it. <ic>'add'</ic> appends a random float column named <ic>injected_&lt;N&gt;</ic>. <ic>'reorder'</ic> shuffles all column positions.</td></tr>
+        <tr><td>col</td><td class="type">str | None</td><td class="desc">Column to target. Required for <ic>drop</ic> and <ic>rename</ic>.</td></tr>
+        <tr><td>new_name</td><td class="type">str | None</td><td class="desc">New column name. Required for <ic>rename</ic>.</td></tr>
+      </table>
+      <div class="dark-card"><pre>monkey.schema_drift(df, attack=<span class="s">'drop'</span>, col=<span class="s">'category'</span>)
+monkey.schema_drift(df, attack=<span class="s">'rename'</span>, col=<span class="s">'amount'</span>, new_name=<span class="s">'value'</span>)
+monkey.schema_drift(df, attack=<span class="s">'add'</span>)
+monkey.schema_drift(df, attack=<span class="s">'reorder'</span>)</pre></div>
+
+      <h3 id="outlier-inject">outlier_inject</h3>
+      <p>Pushes a proportion of values far outside the column's normal distribution. Integer columns are promoted to float automatically, since outlier values by definition can't be stored as integers.</p>
+      <table class="param-table">
+        <tr><th>Parameter</th><th>Type</th><th>Description</th></tr>
+        <tr><td>cols</td><td class="type">list[str]</td><td class="desc">Numeric columns to inject outliers into.</td></tr>
+        <tr><td>sigma</td><td class="type">float</td><td class="desc">Standard deviations beyond the column mean to place each outlier. Default <ic>5.0</ic>.</td></tr>
+        <tr><td>pct</td><td class="type">float</td><td class="desc">Proportion of rows to affect. Default <ic>0.05</ic>.</td></tr>
+      </table>
+      <div class="dark-card"><pre>monkey.outlier_inject(df, cols=[<span class="s">'amount'</span>, <span class="s">'count'</span>], sigma=<span class="n">8.0</span>, pct=<span class="n">0.02</span>)</pre></div>
+
+      <h3 id="temporal">temporal</h3>
+      <p>Corrupts timestamp data. Requires a datetime column; if the column isn't datetime already, havoc-monkey will warn and convert it automatically using <ic>pd.to_datetime</ic>.</p>
+      <table class="param-table">
+        <tr><th>Parameter</th><th>Type</th><th>Description</th></tr>
+        <tr><td>col</td><td class="type">str</td><td class="desc">Datetime column to target.</td></tr>
+        <tr><td>attack</td><td class="type">str</td><td class="desc">See subtypes below. Default <ic>'out_of_order'</ic>.</td></tr>
+        <tr><td>pct</td><td class="type">float</td><td class="desc">Proportion of rows to affect. Used by <ic>out_of_order</ic>, <ic>late</ic>, <ic>future</ic>, <ic>duplicate_ts</ic>. Default <ic>0.10</ic>.</td></tr>
+        <tr><td>delta</td><td class="type">str</td><td class="desc">Pandas offset string (e.g. <ic>'6h'</ic>, <ic>'30d'</ic>). Used by <ic>late</ic> and <ic>future</ic>.</td></tr>
+        <tr><td>window</td><td class="type">tuple[str, str]</td><td class="desc">Start/end date strings. Used only by <ic>missing_window</ic>.</td></tr>
+      </table>
+
+      <table class="param-table" style="margin-top:0;">
+        <tr><th>Subtype</th><th>Effect</th></tr>
+        <tr><td>out_of_order</td><td class="desc">Shuffles <ic>pct</ic>% of timestamps.</td></tr>
+        <tr><td>late</td><td class="desc">Subtracts <ic>delta</ic> from <ic>pct</ic>% of rows, making events appear to arrive late.</td></tr>
+        <tr><td>future</td><td class="desc">Adds <ic>delta</ic> to <ic>pct</ic>% of rows, placing events in the future.</td></tr>
+        <tr><td>missing_window</td><td class="desc">Drops all rows with a timestamp inside the given <ic>window</ic>.</td></tr>
+        <tr><td>duplicate_ts</td><td class="desc">Copies <ic>pct</ic>% of timestamps onto other rows, creating duplicates.</td></tr>
+      </table>
+
+      <div class="dark-card"><pre>monkey.temporal(df, col=<span class="s">'ts'</span>, attack=<span class="s">'out_of_order'</span>, pct=<span class="n">0.2</span>)
+monkey.temporal(df, col=<span class="s">'ts'</span>, attack=<span class="s">'late'</span>, delta=<span class="s">'6h'</span>, pct=<span class="n">0.3</span>)
+monkey.temporal(df, col=<span class="s">'ts'</span>, attack=<span class="s">'future'</span>, delta=<span class="s">'30d'</span>, pct=<span class="n">0.1</span>)
+monkey.temporal(df, col=<span class="s">'ts'</span>, attack=<span class="s">'missing_window'</span>, window=(<span class="s">'2024-03-01'</span>, <span class="s">'2024-03-07'</span>))
+monkey.temporal(df, col=<span class="s">'ts'</span>, attack=<span class="s">'duplicate_ts'</span>, pct=<span class="n">0.1</span>)</pre></div>
+    </section>
+
+    <section id="campaign">
+      <h2>campaign()</h2>
+      <p>Runs a sequence of attacks against a single DataFrame and returns a <ic>Report</ic>. Each attack gets a fresh copy of the original DataFrame, so results are independent of each other.</p>
+      <div class="dark-card"><pre>report = monkey.campaign(
+    df,
+    attacks=[
+        <span class="s">'null_flood'</span>,   <span class="c"># short form, uses default params</span>
+        {<span class="s">'name'</span>: <span class="s">'schema_drift'</span>, <span class="s">'params'</span>: {<span class="s">'attack'</span>: <span class="s">'drop'</span>, <span class="s">'col'</span>: <span class="s">'category'</span>}},
+    ],
+    health_check=my_check,
+)</pre></div>
+      <table class="param-table" style="margin-top:24px;">
+        <tr><th>Parameter</th><th>Type</th><th>Description</th></tr>
+        <tr><td>df</td><td class="type">DataFrame</td><td class="desc">The DataFrame to run attacks against. Never mutated.</td></tr>
+        <tr><td>attacks</td><td class="type">list</td><td class="desc">Each item is either a plain attack name string (uses default params), or a <ic>{"name": ..., "params": {...}}</ic> dict. Attacks that require mandatory params, like <ic>null_flood</ic> needing <ic>cols</ic>, must use the dict form.</td></tr>
+        <tr><td>health_check</td><td class="type">callable | None</td><td class="desc">Optional. See <a href="#health-check" style="color:var(--teal);">health_check</a> below. If omitted, all outcomes are <ic>UNKNOWN</ic>.</td></tr>
+      </table>
+    </section>
+
+    <section id="health-check">
+      <h2>health_check</h2>
+      <p>A callable you write that defines what "working" means for your pipeline. It receives the attacked DataFrame and is expected to run your pipeline on it and assert any invariants you care about. Return any truthy value on success; raise on failure.</p>
+      <div class="dark-card"><pre><span class="c">def</span> <span class="k">health_check</span>(df: pd.DataFrame) -> bool:
+    result = my_pipeline(df)
+    <span class="c">assert</span> result[<span class="s">'amount'</span>].notnull().all(), <span class="s">"nulls leaked"</span>
+    <span class="c">assert</span> len(result) > <span class="n">0</span>, <span class="s">"empty output"</span>
+    <span class="c">return</span> True</pre></div>
+      <p style="margin-top:18px;">Each outcome is classified based on what the health check does:</p>
+      <ul>
+        <li><strong>PASSED</strong>: the health check returned without error. Your pipeline handled the attack.</li>
+        <li><strong>FAILED</strong>: the health check raised <ic>AssertionError</ic>. Your pipeline explicitly detected the bad data, but it still broke.</li>
+        <li><strong>ERROR</strong>: the health check raised any other exception. Your pipeline crashed entirely, worse than FAILED.</li>
+        <li><strong>UNKNOWN</strong>: no health check was provided. The report documents what changed, but can't classify impact without one.</li>
+      </ul>
+
+      <h3>Severity</h3>
+      <p>Severity is derived automatically from the attack type and outcome:</p>
+      <table class="param-table">
+        <tr><th>Condition</th><th>Severity</th></tr>
+        <tr><td><ic>schema_drift</ic> FAILED, or <ic>volume_shock / empty</ic> FAILED</td><td class="desc"><strong>CRITICAL</strong></td></tr>
+        <tr><td>Any other attack FAILED</td><td class="desc"><strong>HIGH</strong></td></tr>
+        <tr><td>Any attack ERROR</td><td class="desc"><strong>MEDIUM</strong></td></tr>
+        <tr><td>Any attack PASSED</td><td class="desc"><strong>LOW</strong></td></tr>
+        <tr><td>No health check provided</td><td class="desc"><strong>UNKNOWN</strong></td></tr>
+      </table>
+    </section>
+
+    <section id="report">
+      <h2>Report</h2>
+      <p>Returned by <ic>campaign()</ic>. Print it directly for a colour-coded terminal summary, or use the export methods for CI integration or sharing.</p>
+      <table class="param-table">
+        <tr><th>Attribute</th><th>Type</th><th>Description</th></tr>
+        <tr><td>seed</td><td class="type">int</td><td class="desc">The seed used for this run. Share it to reproduce the exact same campaign.</td></tr>
+        <tr><td>total</td><td class="type">int</td><td class="desc">Total attacks run.</td></tr>
+        <tr><td>passed</td><td class="type">int</td><td class="desc">Count of PASSED outcomes.</td></tr>
+        <tr><td>failed</td><td class="type">int</td><td class="desc">Count of FAILED outcomes.</td></tr>
+        <tr><td>errors</td><td class="type">int</td><td class="desc">Count of ERROR outcomes.</td></tr>
+        <tr><td>results</td><td class="type">list[AttackResult]</td><td class="desc">One result per attack run, in order.</td></tr>
+      </table>
+
+      <p style="margin-top:8px;">Each <ic>AttackResult</ic> carries:</p>
+      <table class="param-table">
+        <tr><th>Field</th><th>Type</th><th>Description</th></tr>
+        <tr><td>attack</td><td class="type">str</td><td class="desc">Attack name.</td></tr>
+        <tr><td>params</td><td class="type">dict</td><td class="desc">Parameters the attack was called with.</td></tr>
+        <tr><td>hc_result</td><td class="type">str</td><td class="desc">Outcome: <ic>PASSED</ic>, <ic>FAILED</ic>, <ic>ERROR</ic>, or <ic>SKIPPED</ic>.</td></tr>
+        <tr><td>severity</td><td class="type">str</td><td class="desc"><ic>CRITICAL</ic>, <ic>HIGH</ic>, <ic>MEDIUM</ic>, <ic>LOW</ic>, or <ic>UNKNOWN</ic>.</td></tr>
+        <tr><td>rows_before / rows_after</td><td class="type">int</td><td class="desc">Row count before and after the attack.</td></tr>
+        <tr><td>schema_before / schema_after</td><td class="type">list[str]</td><td class="desc">Column names before and after the attack.</td></tr>
+        <tr><td>nulls_injected</td><td class="type">int</td><td class="desc">Net new nulls introduced.</td></tr>
+        <tr><td>hc_error</td><td class="type">str | None</td><td class="desc">Exception message if outcome was FAILED or ERROR.</td></tr>
+        <tr><td>recommendation</td><td class="type">str</td><td class="desc">Suggested fix for this attack/outcome combination.</td></tr>
+      </table>
+
+      <h3 id="report-export">Export</h3>
+      <p>Three formats, each suited to a different use:</p>
+      <div class="dark-card"><pre>report.to_dict()      <span class="c"># serialisable dict, use with json.dumps or any downstream tool</span>
+report.to_markdown()  <span class="c"># GitHub-flavoured Markdown table, paste into PRs or CI artifacts</span>
+report.to_html()      <span class="c"># self-contained branded HTML file, open in a browser or email as-is</span></pre></div>
+    </section>
+
+    <section id="pytest-plugin">
+      <h2>Pytest Plugin</h2>
+      <p>Registered automatically via the <ic>pytest11</ic> entry point when you install havoc-monkey. No imports needed, the fixture and marker are available in every test file the moment you run pytest.</p>
+
+      <h3>Fixture: havoc_monkey_instance</h3>
+      <p>A <ic>HavocMonkey</ic> instance seeded by <ic>--havoc-seed</ic> (default 42), scoped per test. Use it to run attacks directly inside a test.</p>
+      <div class="dark-card"><pre><span class="c">def</span> <span class="k">test_handles_nulls</span>(havoc_monkey_instance, my_df):
+    attacked = havoc_monkey_instance.null_flood(my_df, cols=[<span class="s">'amount'</span>])
+    result = my_pipeline(attacked)
+    <span class="c">assert</span> result[<span class="s">'total'</span>].notnull().all()</pre></div>
+
+      <h3>Marker: @pytest.mark.havoc_monkey</h3>
+      <p>Run a full campaign from inside a test. If the test fails, the campaign report is automatically attached to the test output, so you see exactly which attack caused the failure and why.</p>
+      <div class="dark-card"><pre><span class="c">import</span> pytest
+
+@pytest.mark.havoc_monkey(attacks=[<span class="s">'null_flood'</span>, <span class="s">'schema_drift'</span>])
+<span class="c">def</span> <span class="k">test_pipeline_resilience</span>(havoc_monkey_instance, my_df):
+    <span class="c">def</span> <span class="k">hc</span>(df):
+        result = my_pipeline(df)
+        <span class="c">assert</span> len(result) > <span class="n">0</span>
+        <span class="c">return</span> True
+
+    report = havoc_monkey_instance.campaign(
+        my_df,
+        attacks=[<span class="s">'null_flood'</span>, <span class="s">'schema_drift'</span>],
+        health_check=hc,
+    )
+    <span class="c">assert</span> report.failed == <span class="n">0</span></pre></div>
+
+      <h3>CLI option</h3>
+      <p>Override the seed for the entire test run:</p>
+      <div class="dark-card"><pre>pytest --havoc-seed <span class="n">99</span></pre></div>
+    </section>
+
+    <section id="cli">
+      <h2>CLI</h2>
+
+      <h3>havoc-monkey run</h3>
+      <p>Loads a file, runs the specified attacks without a health check, and prints the report. All outcomes are UNKNOWN: the CLI is for quick exploration, not measurement. Use the Python API with a <ic>health_check</ic> for classification.</p>
+      <div class="dark-card"><pre>havoc-monkey run \
+  --file data.csv \
+  --attacks null_flood \
+  --attacks schema_drift \
+  --seed <span class="n">42</span></pre></div>
+      <table class="param-table" style="margin-top:16px;">
+        <tr><th>Flag</th><th>Description</th></tr>
+        <tr><td>--file</td><td class="desc">Path to a CSV, JSON, or Parquet file. The format is detected from the extension.</td></tr>
+        <tr><td>--attacks</td><td class="desc">Attack name. Pass once per attack to run multiple.</td></tr>
+        <tr><td>--seed</td><td class="desc">RNG seed. Default <ic>42</ic>.</td></tr>
+        <tr><td>--output</td><td class="desc">Optional. Save the report to a file instead of printing. Extension determines format: <ic>.html</ic> for the branded HTML report, <ic>.md</ic> for Markdown, anything else for plain text.</td></tr>
+      </table>
+
+      <div class="dark-card"><pre><span class="c"># Save as a Markdown artifact for CI</span>
+havoc-monkey run --file data.parquet --attacks null_flood --output report.md
+
+<span class="c"># Save as a shareable HTML report</span>
+havoc-monkey run --file data.csv --attacks null_flood --attacks schema_drift --output report.html</pre></div>
+
+      <h3>havoc-monkey list-attacks</h3>
+      <p>Prints a quick-reference table of every attack, its subtypes, and its parameters.</p>
+      <div class="dark-card"><pre>havoc-monkey list-attacks</pre></div>
+    </section>
+
+  </div><!-- /content -->
+</div><!-- /page-body -->
+
+<footer>
+  <span class="ft">Aitor Bazo · 2026</span>
+  <div class="social-icons">
+    <a class="social-icon" href="https://github.com/aitor1717/havoc-monkey" target="_blank" aria-label="GitHub">
+      <svg viewBox="0 0 24 24"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+    </a>
+    <a class="social-icon" href="https://pypi.org/project/havoc-monkey/" target="_blank" aria-label="PyPI">
+      <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+    </a>
+    <a class="social-icon" href="https://www.linkedin.com/in/aitorbazo/" target="_blank" aria-label="LinkedIn">
+      <svg viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+    </a>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var c=document.getElementById('dots'),ctx=c.getContext('2d'),W,H,dots=[];
+  var COUNT=90,COLOR='61,242,204';
+  function resize(){W=c.width=window.innerWidth;H=c.height=window.innerHeight;}
+  function init(){dots=[];for(var i=0;i<COUNT;i++)dots.push({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.6+.6,vx:(Math.random()-.5)*.22,vy:(Math.random()-.5)*.22,o:Math.random()*.18+.05});}
+  function frame(){ctx.clearRect(0,0,W,H);dots.forEach(function(d){d.x+=d.vx;d.y+=d.vy;if(d.x<-4)d.x=W+4;if(d.x>W+4)d.x=-4;if(d.y<-4)d.y=H+4;if(d.y>H+4)d.y=-4;ctx.beginPath();ctx.arc(d.x,d.y,d.r,0,Math.PI*2);ctx.fillStyle='rgba('+COLOR+','+d.o+')';ctx.fill();});requestAnimationFrame(frame);}
+  window.addEventListener('resize',function(){resize();init();});resize();init();frame();
+})();
+</script>
+</body>
+</html>

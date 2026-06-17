@@ -1,0 +1,13 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+.coverage
+dist/
+build/
+*.egg-info/
+.venv/
+
+# internal planning/audit artifacts, not part of the public release
+havoc_monkey_build_plan.html
+report_1.html
+color_palet.webp
