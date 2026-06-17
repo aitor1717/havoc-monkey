@@ -4,7 +4,13 @@ from typing import Optional
 import pandas as pd
 
 
+def _validate_pct(pct: float) -> None:
+    if not (0 <= pct <= 1):
+        raise ValueError(f"pct must be between 0 and 1, got {pct!r}")
+
+
 def null_flood(self, df: pd.DataFrame, cols: list[str], pct: float = 0.10) -> pd.DataFrame:
+    _validate_pct(pct)
     out = df.copy()
     n = int(len(out) * pct)
     for col in cols:
@@ -52,11 +58,19 @@ def schema_drift(self, df: pd.DataFrame, attack: str = 'drop', col: Optional[str
 
 
 def outlier_inject(self, df: pd.DataFrame, cols: list[str], sigma: float = 5.0, pct: float = 0.05) -> pd.DataFrame:
+    _validate_pct(pct)
     out = df.copy()
     n = int(len(out) * pct)
     for col in cols:
         mean = df[col].mean()
         std = df[col].std()
+        if pd.isna(std) or std == 0:
+            warnings.warn(
+                f"Column '{col}' has zero or undefined standard deviation; "
+                "skipping outlier injection for this column.",
+                UserWarning,
+            )
+            continue
         idx = self.rng.choice(len(out), size=n, replace=False)
         signs = self.rng.choice([-1, 1], size=n)
         out[col] = out[col].astype(float)  # pandas 3.0+ requires explicit cast before float assignment
@@ -65,6 +79,7 @@ def outlier_inject(self, df: pd.DataFrame, cols: list[str], sigma: float = 5.0, 
 
 
 def temporal(self, df: pd.DataFrame, col: str, attack: str = 'out_of_order', pct: float = 0.10, delta: str = '2h', window: Optional[tuple] = None) -> pd.DataFrame:
+    _validate_pct(pct)
     out = df.copy()
     if not pd.api.types.is_datetime64_any_dtype(out[col]):
         warnings.warn(
@@ -93,6 +108,8 @@ def temporal(self, df: pd.DataFrame, col: str, attack: str = 'out_of_order', pct
         return out
 
     if attack == 'missing_window':
+        if window is None:
+            raise ValueError("temporal(attack='missing_window') requires a window=(start, end) tuple")
         start, end = pd.Timestamp(window[0]), pd.Timestamp(window[1])
         mask = (out[col] >= start) & (out[col] <= end)
         return out[~mask]

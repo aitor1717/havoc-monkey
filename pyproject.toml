@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "havoc-monkey"
-version = "0.1.1"
+version = "0.1.2"
 description = "Deliberate failure injection for data pipelines"
 readme = "README.md"
 license = {text = "MIT"}
@@ -19,7 +19,7 @@ classifiers = [
 dependencies = ["pandas>=1.5", "numpy>=1.23", "click>=8.0"]
 
 [project.optional-dependencies]
-dev = ["pytest>=7", "pytest-cov", "hatchling"]
+dev = ["pytest>=7", "coverage", "mypy", "hatchling"]
 
 [project.entry-points."pytest11"]
 havoc-monkey = "havoc_monkey.plugin"
@@ -33,5 +33,8 @@ packages = ["src/havoc_monkey"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 markers = [
-  "havoc_monkey: run a havoc-monkey campaign against the test's health check",
+  "havoc_monkey: marks a test that runs its own havoc-monkey campaign and attaches the last report to the test output on failure",
 ]
+
+[tool.coverage.run]
+source = ["havoc_monkey"]

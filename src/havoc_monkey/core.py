@@ -11,7 +11,7 @@ from havoc_monkey.attacks import (
     outlier_inject,
     temporal,
 )
-from havoc_monkey.report import AttackResult, Report, get_recommendation, get_severity
+from havoc_monkey.report import AttackResult, HCResult, Report, get_recommendation, get_severity
 
 
 class HavocMonkey:
@@ -53,6 +53,7 @@ class HavocMonkey:
             nulls_after = int(attacked.isna().sum().sum())
             nulls_injected = max(0, nulls_after - nulls_before)
 
+            hc_result: HCResult
             if health_check is None:
                 hc_result, hc_error = 'SKIPPED', None
             else:

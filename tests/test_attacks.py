@@ -63,6 +63,11 @@ def test_volume_shock_does_not_mutate_input(s, sample_df):
     assert _hash(sample_df) == before
 
 
+def test_volume_shock_invalid_attack_raises_value_error(s, sample_df):
+    with pytest.raises(ValueError, match="Unknown volume_shock attack"):
+        s.volume_shock(sample_df, attack='nonexistent')
+
+
 # ── type_coerce ─────────────────────────────────────────────────────
 
 def test_type_coerce_changes_dtype(s, sample_df):
@@ -132,6 +137,11 @@ def test_schema_drift_does_not_mutate_input(s, sample_df):
     assert list(sample_df.columns) == cols_before
 
 
+def test_schema_drift_invalid_attack_raises_value_error(s, sample_df):
+    with pytest.raises(ValueError, match="Unknown schema_drift attack"):
+        s.schema_drift(sample_df, attack='nonexistent')
+
+
 # ── outlier_inject ──────────────────────────────────────────────────
 
 def test_outlier_inject_int64_column(s, sample_df):
@@ -168,6 +178,34 @@ def test_outlier_inject_does_not_mutate_input(s, sample_df):
     assert _hash(sample_df) == before
 
 
+def test_outlier_inject_zero_variance_column_warns_and_skips(s, sample_df):
+    df = sample_df.copy()
+    df['constant'] = 7.0
+    with pytest.warns(UserWarning, match="zero or undefined standard deviation"):
+        out = s.outlier_inject(df, cols=['constant'], sigma=5.0, pct=0.05)
+    assert (out['constant'] == 7.0).all()
+    assert out['constant'].isna().sum() == 0
+
+
+def test_outlier_inject_single_row_warns_and_skips(s):
+    df = pd.DataFrame({'amount': [42.0]})
+    with pytest.warns(UserWarning, match="zero or undefined standard deviation"):
+        out = s.outlier_inject(df, cols=['amount'], sigma=5.0, pct=1.0)
+    assert out['amount'].isna().sum() == 0
+    assert out['amount'].iloc[0] == 42.0
+
+
+@pytest.mark.parametrize("attack_name,kwargs", [
+    ("null_flood", {"cols": ["amount"]}),
+    ("outlier_inject", {"cols": ["amount"]}),
+    ("temporal", {"col": "timestamp"}),
+])
+def test_pct_out_of_range_raises_value_error(s, sample_df, attack_name, kwargs):
+    method = getattr(s, attack_name)
+    with pytest.raises(ValueError, match="pct must be between 0 and 1"):
+        method(sample_df, pct=1.5, **kwargs)
+
+
 # ── temporal ────────────────────────────────────────────────────────
 
 def test_temporal_out_of_order(s, sample_df):
@@ -197,6 +235,11 @@ def test_temporal_missing_window(s, sample_df):
     assert len(out) < len(sample_df)
 
 
+def test_temporal_missing_window_without_window_raises_value_error(s, sample_df):
+    with pytest.raises(ValueError, match="requires a window"):
+        s.temporal(sample_df, col='timestamp', attack='missing_window')
+
+
 def test_temporal_duplicate_ts(s, sample_df):
     out = s.temporal(sample_df, col='timestamp', attack='duplicate_ts', pct=0.2)
     assert out['timestamp'].duplicated().sum() > sample_df['timestamp'].duplicated().sum()
@@ -216,3 +259,8 @@ def test_temporal_does_not_mutate_input(s, sample_df):
     _ = s.temporal(sample_df, col='timestamp', attack='late', pct=0.2)
     _ = s.temporal(sample_df, col='timestamp', attack='duplicate_ts', pct=0.2)
     assert _hash(sample_df) == before
+
+
+def test_temporal_invalid_attack_raises_value_error(s, sample_df):
+    with pytest.raises(ValueError, match="Unknown temporal attack"):
+        s.temporal(sample_df, col='timestamp', attack='nonexistent')

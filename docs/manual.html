@@ -171,6 +171,7 @@ monkey = HavocMonkey(seed=<span class="n">42</span>)</pre></div>
       <h2>Attacks</h2>
       <p>Every attack takes a DataFrame, applies the failure to a copy, and returns that copy. The original DataFrame is never mutated. Each attack is available as a method on the <ic>HavocMonkey</ic> instance.</p>
       <p>In a campaign, each attack runs against the <strong>original</strong> DataFrame, not the output of the previous attack. This keeps each result clean: one failure mode, measured in isolation.</p>
+      <p>Every <ic>pct</ic> parameter must be between 0 and 1; out-of-range values raise a <ic>ValueError</ic>.</p>
 
       <h3 id="null-flood">null_flood</h3>
       <p>Injects nulls into the specified columns. Rows are chosen at random according to the seed.</p>
@@ -218,7 +219,7 @@ monkey.schema_drift(df, attack=<span class="s">'add'</span>)
 monkey.schema_drift(df, attack=<span class="s">'reorder'</span>)</pre></div>
 
       <h3 id="outlier-inject">outlier_inject</h3>
-      <p>Pushes a proportion of values far outside the column's normal distribution. Integer columns are promoted to float automatically, since outlier values by definition can't be stored as integers.</p>
+      <p>Pushes a proportion of values far outside the column's normal distribution. Integer columns are promoted to float automatically, since outlier values by definition can't be stored as integers. Columns with zero or undefined standard deviation (a constant column, or a single-row DataFrame) have no meaningful "outlier" to inject; havoc-monkey warns and skips that column rather than injecting one.</p>
       <table class="param-table">
         <tr><th>Parameter</th><th>Type</th><th>Description</th></tr>
         <tr><td>cols</td><td class="type">list[str]</td><td class="desc">Numeric columns to inject outliers into.</td></tr>
@@ -235,7 +236,7 @@ monkey.schema_drift(df, attack=<span class="s">'reorder'</span>)</pre></div>
         <tr><td>attack</td><td class="type">str</td><td class="desc">See subtypes below. Default <ic>'out_of_order'</ic>.</td></tr>
         <tr><td>pct</td><td class="type">float</td><td class="desc">Proportion of rows to affect. Used by <ic>out_of_order</ic>, <ic>late</ic>, <ic>future</ic>, <ic>duplicate_ts</ic>. Default <ic>0.10</ic>.</td></tr>
         <tr><td>delta</td><td class="type">str</td><td class="desc">Pandas offset string (e.g. <ic>'6h'</ic>, <ic>'30d'</ic>). Used by <ic>late</ic> and <ic>future</ic>.</td></tr>
-        <tr><td>window</td><td class="type">tuple[str, str]</td><td class="desc">Start/end date strings. Used only by <ic>missing_window</ic>.</td></tr>
+        <tr><td>window</td><td class="type">tuple[str, str]</td><td class="desc">Start/end date strings. Required for <ic>missing_window</ic>; raises <ic>ValueError</ic> if omitted.</td></tr>
       </table>
 
       <table class="param-table" style="margin-top:0;">

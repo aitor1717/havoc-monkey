@@ -1,4 +1,5 @@
 from dataclasses import dataclass, field, asdict
+from html import escape
 from typing import Literal, Optional
 
 Severity = Literal['CRITICAL', 'HIGH', 'MEDIUM', 'LOW', 'UNKNOWN']
@@ -119,7 +120,7 @@ class Report:
             lines.pop()
         lines.append(sep)
 
-        severity_counts = {}
+        severity_counts: dict[str, int] = {}
         for result in self.results:
             severity_counts[result.severity] = severity_counts.get(result.severity, 0) + 1
 
@@ -177,18 +178,22 @@ class Report:
 
         rows_html = ""
         for r in self.results:
-            subtype = r.params.get('attack', '-')
+            attack = escape(str(r.attack))
+            subtype = escape(str(r.params.get('attack', '-')))
+            hc_result = escape(str(r.hc_result))
+            severity = escape(str(r.severity))
+            recommendation = escape(str(r.recommendation))
             row_change = f"{r.rows_before}→{r.rows_after}"
             oc = _OUTCOME_COLOR.get(r.hc_result, '#9E9A96')
             sc = _SEV_COLOR.get(r.severity, '#9E9A96')
             rows_html += f"""
         <tr>
-          <td><code>{r.attack}</code></td>
+          <td><code>{attack}</code></td>
           <td>{subtype}</td>
-          <td><span class="chip" style="background:{oc}22;color:{oc};border:1px solid {oc}66">{r.hc_result}</span></td>
-          <td><span class="chip" style="background:{sc}22;color:{sc};border:1px solid {sc}66">{r.severity}</span></td>
+          <td><span class="chip" style="background:{oc}22;color:{oc};border:1px solid {oc}66">{hc_result}</span></td>
+          <td><span class="chip" style="background:{sc}22;color:{sc};border:1px solid {sc}66">{severity}</span></td>
           <td>{row_change}</td>
-          <td>{r.recommendation}</td>
+          <td>{recommendation}</td>
         </tr>"""
 
         return f"""<!DOCTYPE html>

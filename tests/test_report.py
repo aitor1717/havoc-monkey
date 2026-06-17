@@ -138,3 +138,17 @@ def test_to_html_structure():
     assert 'FAILED' in html
     assert 'PASSED' in html
     assert '--peach' in html
+
+
+def test_to_html_escapes_interpolated_fields():
+    result = make_result(
+        attack='<script>alert(1)</script>',
+        params={'attack': '"><img src=x onerror=alert(2)>'},
+        hc_result='FAILED',
+    )
+    report = Report(seed=1, total=1, passed=0, failed=1, errors=0, skipped=0, results=[result])
+    html = report.to_html()
+    assert '<script>alert(1)</script>' not in html
+    assert '&lt;script&gt;' in html
+    assert '<img src=x onerror=alert(2)>' not in html
+    assert '&lt;img src=x onerror=alert(2)&gt;' in html

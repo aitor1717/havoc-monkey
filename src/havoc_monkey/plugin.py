@@ -16,8 +16,10 @@ def pytest_addoption(parser):
 def pytest_configure(config):
     config.addinivalue_line(
         "markers",
-        "havoc_monkey(attacks, health_check=None): run a havoc-monkey campaign "
-        "for this test and report results.",
+        "havoc_monkey: marks a test that runs its own havoc-monkey campaign. "
+        "Run the campaign yourself inside the test body (this marker does not "
+        "run it for you); if the test then fails, the campaign's last report "
+        "is attached to the test output.",
     )
 
 

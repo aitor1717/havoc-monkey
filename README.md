@@ -163,6 +163,19 @@ Prints a table of every attack with its subtypes and parameters.
 
 Full docs, including the API reference and worked examples, are at [aitor1717.github.io/havoc-monkey](https://aitor1717.github.io/havoc-monkey/).
 
+## Development
+
+```bash
+pip install -e ".[dev]"
+coverage run -m pytest tests/
+coverage report -m
+mypy src/havoc_monkey --ignore-missing-imports
+```
+
+Use `coverage run`, not `pytest --cov`: havoc-monkey registers itself as a pytest plugin via a `pytest11` entry point, so it gets imported before `pytest-cov` attaches, which makes `pytest --cov` undercount coverage by 20+ points and warn about an unmeasured module. `coverage run -m pytest` measures from process start and doesn't have this problem.
+
+CI also runs on Windows and macOS across the full Python 3.9-3.13 matrix, type-checks with `mypy`, and verifies the package against its declared minimum dependency versions (`pandas==1.5.3`, `numpy==1.23.5`).
+
 ## License
 
 MIT

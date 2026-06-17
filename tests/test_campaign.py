@@ -1,10 +1,20 @@
 import pandas as pd
 
+from havoc_monkey import HavocMonkey
 from havoc_monkey.report import Report
 
 
 def _hash(df):
     return pd.util.hash_pandas_object(df).sum()
+
+
+def test_context_manager_returns_self_and_is_usable(sample_df):
+    with HavocMonkey(seed=42) as monkey:
+        assert isinstance(monkey, HavocMonkey)
+        attacked = monkey.null_flood(sample_df, cols=['amount'])
+        assert attacked['amount'].isna().sum() > 0
+    # still usable and accessible after the block exits (no-op __exit__)
+    assert monkey.last_report is None
 
 
 def test_campaign_no_health_check_is_skipped(s, sample_df):
