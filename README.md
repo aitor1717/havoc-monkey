@@ -1,12 +1,12 @@
 # havoc-monkey
 
+![HTML output of a havoc-monkey campaign report](docs/assets/html_report.png)
+
 [![Tests](https://github.com/aitor1717/havoc-monkey/actions/workflows/test.yml/badge.svg)](https://github.com/aitor1717/havoc-monkey/actions/workflows/test.yml)
 [![PyPI](https://img.shields.io/pypi/v/havoc-monkey)](https://pypi.org/project/havoc-monkey/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-![HTML output of a havoc-monkey campaign report](docs/assets/html_report.png)
-
-## Why
+> Deliberate failure injection for data pipelines.
 
 Pipelines fail silently. A renamed column, a batch of nulls, a late timestamp: none of these raise an exception, they just quietly corrupt your output. havoc-monkey applies the same idea as Chaos Monkey to data: a seeded, reproducible injector that breaks your pipeline's input on purpose, so you find the gaps before production does.
 
