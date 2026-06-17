@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.9.0] - 2026-06-17
+
+Signals production-readiness: builds on 0.1.2's type-checking, 100% coverage, and widened CI matrix.
+
+### Changed
+- `Report.to_html()` stat tiles (PASSED/FAILED/ERRORS/UNKNOWN) now use a charcoal tint instead of a pale white overlay, which washed out against the gradient header
+- PyPI classifier bumped from "3 - Alpha" to "4 - Beta"
+
 ## [0.1.2] - 2026-06-17
 
 ### Fixed

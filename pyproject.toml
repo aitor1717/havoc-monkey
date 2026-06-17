@@ -4,14 +4,14 @@ build-backend = "hatchling.build"
 
 [project]
 name = "havoc-monkey"
-version = "0.1.2"
+version = "0.9.0"
 description = "Deliberate failure injection for data pipelines"
 readme = "README.md"
 license = {text = "MIT"}
 requires-python = ">=3.9"
 keywords = ["data", "testing", "chaos-engineering", "pipelines", "ml"]
 classifiers = [
-  "Development Status :: 3 - Alpha",
+  "Development Status :: 4 - Beta",
   "Intended Audience :: Developers",
   "Topic :: Software Development :: Testing",
   "Programming Language :: Python :: 3",
