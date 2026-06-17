@@ -186,7 +186,7 @@ monkey = HavocMonkey(seed=<span class="n">42</span>)</pre></div>
       <p>Alters the number of rows. Tests whether your pipeline handles empty batches, unexpected overflow, or truncated partials.</p>
       <table class="param-table">
         <tr><th>Parameter</th><th>Type</th><th>Description</th></tr>
-        <tr><td>attack</td><td class="type">str</td><td class="desc"><ic>'empty'</ic> returns zero rows with the original schema intact, <ic>'overflow'</ic> repeats rows to reach <ic>factor×</ic> the original size, <ic>'truncate'</ic> keeps only the first <ic>ratio</ic> of rows.</td></tr>
+        <tr><td>attack</td><td class="type">str</td><td class="desc"><ic>'empty'</ic> returns zero rows with the original schema intact. <ic>'overflow'</ic> repeats rows to reach <ic>factor×</ic> the original size. <ic>'truncate'</ic> keeps only the first <ic>ratio</ic> of rows.</td></tr>
         <tr><td>factor</td><td class="type">float</td><td class="desc">Overflow multiplier. Default <ic>10.0</ic>.</td></tr>
         <tr><td>ratio</td><td class="type">float</td><td class="desc">Truncation ratio (0–1). Default <ic>0.5</ic>.</td></tr>
       </table>
@@ -337,7 +337,7 @@ report.to_html()      <span class="c"># self-contained branded HTML file, open i
 
     <section id="pytest-plugin">
       <h2>Pytest Plugin</h2>
-      <p>Registered automatically via the <ic>pytest11</ic> entry point when you install havoc-monkey. No imports needed, the fixture and marker are available in every test file the moment you run pytest.</p>
+      <p>Registered automatically via the <ic>pytest11</ic> entry point when you install havoc-monkey. No imports needed. The fixture and marker are available in every test file the moment you run pytest.</p>
 
       <h3>Fixture: havoc_monkey_instance</h3>
       <p>A <ic>HavocMonkey</ic> instance seeded by <ic>--havoc-seed</ic> (default 42), scoped per test. Use it to run attacks directly inside a test.</p>

@@ -8,7 +8,9 @@
 
 ## Why
 
-Pipelines fail silently. A renamed column, a batch of nulls, a late timestamp: none of these raise an exception, they just quietly corrupt your output. havoc-monkey is Chaos Engineering for DataFrame content, a seeded, reproducible injector that breaks your pipeline on purpose, so you find the gaps before production does.
+Pipelines fail silently. A renamed column, a batch of nulls, a late timestamp: none of these raise an exception, they just quietly corrupt your output. havoc-monkey applies the same idea as Chaos Monkey to data: a seeded, reproducible injector that breaks your pipeline's input on purpose, so you find the gaps before production does.
+
+Requires Python 3.9+.
 
 ## Install
 
@@ -46,7 +48,7 @@ print(report)
 | `outlier_inject` | Push `pct`% of values to `sigma` standard deviations beyond the column's distribution. | `cols: list[str]`, `sigma: float=5.0`, `pct: float=0.05` |
 | `temporal` | Out-of-order, late, future, missing-window, or duplicate timestamps. | see below |
 
-All attacks return `df.copy()`, the input DataFrame is never mutated.
+All attacks return `df.copy()`. The input DataFrame is never mutated.
 
 ## Temporal Attacks
 
@@ -86,14 +88,14 @@ Each attack in a campaign runs against the **original** DataFrame, not the outpu
 
 Each attack's outcome is classified as:
 
-- **FAILED**: `health_check` raised `AssertionError` (your pipeline explicitly rejected bad data, good, but it broke).
-- **ERROR**: `health_check` raised any other exception (your pipeline crashed, which is worse).
-- **PASSED**: `health_check` returned without error (your pipeline handled the attack).
-- **SKIPPED**: no `health_check` was provided. Severity is reported as `UNKNOWN`; havoc-monkey only documents the change, it can't measure impact without a check.
+- **FAILED**: `health_check` raised `AssertionError`. Your pipeline's own guard caught the bad data and stopped, which is the assertion doing its job, but the run still broke.
+- **ERROR**: `health_check` raised any other exception. Your pipeline crashed outright, with no assertion catching it first.
+- **PASSED**: `health_check` returned without error. Your pipeline handled the attack.
+- **SKIPPED**: no `health_check` was provided. Severity is reported as `UNKNOWN`; havoc-monkey only documents the change, it can't measure impact without one.
 
 ## Pytest Plugin
 
-Installing havoc-monkey auto-registers a pytest plugin, no imports needed.
+Installing havoc-monkey auto-registers a pytest plugin. No imports needed.
 
 **Pattern A, fixture (direct attack):**
 
@@ -157,9 +159,9 @@ havoc-monkey list-attacks
 
 Prints a table of every attack with its subtypes and parameters.
 
-## Pairs With
+## Documentation
 
-[canary-ml](https://github.com/aitor1717/canary-ml) detects what havoc-monkey injects: havoc-monkey breaks your pipeline on purpose, canary-ml watches for the breakage in production.
+Full docs, including the API reference and worked examples, are at [aitor1717.github.io/havoc-monkey](https://aitor1717.github.io/havoc-monkey/).
 
 ## License
 
