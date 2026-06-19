@@ -15,3 +15,6 @@ color_palet.webp
 
 # superseded asset drafts, kept locally for reference only
 docs/assets/archive/
+
+# local-only Claude Code project guide, not part of the public repo
+CLAUDE.md
