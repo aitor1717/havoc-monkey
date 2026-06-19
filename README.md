@@ -41,7 +41,7 @@ print(report)
 
 ## Demo
 
-![Terminal demo of a havoc-monkey campaign report](docs/assets/demo.svg)
+<p align="center"><img src="docs/assets/demo.svg" alt="Terminal demo of a havoc-monkey campaign report"></p>
 
 ## Attacks
 
