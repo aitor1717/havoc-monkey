@@ -4,11 +4,22 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Manual · havoc-monkey</title>
+<meta name="description" content="API reference for havoc-monkey: attacks, campaign, report, pytest plugin, and CLI.">
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<meta property="og:title" content="Manual · havoc-monkey">
+<meta property="og:description" content="API reference: attacks, campaign, report, pytest plugin, and CLI.">
+<meta property="og:image" content="https://aitor1717.github.io/havoc-monkey/assets/loop-horizontal-7s.gif">
+<meta property="og:url" content="https://aitor1717.github.io/havoc-monkey/manual.html">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Manual · havoc-monkey">
+<meta name="twitter:description" content="API reference: attacks, campaign, report, pytest plugin, and CLI.">
+<meta name="twitter:image" content="https://aitor1717.github.io/havoc-monkey/assets/loop-horizontal-7s.gif">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root{
     --peach:#FBC990; --coral:#F9787C; --pink:#FA0A6C;
-    --teal:#14C2C4; --mint:#3DF2CC;
+    --teal:#14C2C4; --teal-text:#109698; --mint:#3DF2CC;
     --charcoal:#1E1E1E; --cream:#FFFBF5; --muted:#9E9A96;
     --sans:'Space Grotesk',sans-serif; --mono:'IBM Plex Mono',monospace;
     --code-kw:#6DF5D6; --code-str:#FBAAAC; --code-num:#FCD5A6; --code-cmt:#919190;
@@ -59,16 +70,16 @@
   .content p:last-child{margin-bottom:0;}
   .content ul{margin:10px 0 14px 0;padding-left:0;list-style:none;}
   .content ul li{font-size:14.5px;color:#4A4845;padding:4px 0 4px 18px;position:relative;}
-  .content ul li::before{content:'·';position:absolute;left:6px;color:var(--teal);font-weight:700;}
+  .content ul li::before{content:'·';position:absolute;left:6px;color:var(--teal-text);font-weight:700;}
   ic{font-family:var(--mono);font-size:13px;background:rgba(20,194,196,.1);
-    color:var(--teal);padding:2px 7px;border-radius:4px;}
+    color:var(--teal-text);padding:2px 7px;border-radius:4px;}
 
   /* PARAMS TABLE */
   .param-table{width:100%;border-collapse:collapse;font-size:13.5px;margin:16px 0 24px;}
   .param-table th{text-align:left;font-family:var(--mono);font-size:11px;color:var(--muted);
     text-transform:uppercase;letter-spacing:.1em;padding:8px 12px;border-bottom:1px solid rgba(30,30,30,.1);}
   .param-table td{padding:12px 12px;border-bottom:1px solid rgba(30,30,30,.06);vertical-align:top;}
-  .param-table td:first-child{font-family:var(--mono);font-size:13px;color:var(--teal);white-space:nowrap;}
+  .param-table td:first-child{font-family:var(--mono);font-size:13px;color:var(--teal-text);white-space:nowrap;}
   .param-table td.type{font-family:var(--mono);font-size:12.5px;color:var(--muted);}
   .param-table td.desc{color:#4A4845;font-size:13.5px;}
 
@@ -270,7 +281,7 @@ monkey.temporal(df, col=<span class="s">'ts'</span>, attack=<span class="s">'dup
         <tr><th>Parameter</th><th>Type</th><th>Description</th></tr>
         <tr><td>df</td><td class="type">DataFrame</td><td class="desc">The DataFrame to run attacks against. Never mutated.</td></tr>
         <tr><td>attacks</td><td class="type">list</td><td class="desc">Each item is either a plain attack name string (uses default params), or a <ic>{"name": ..., "params": {...}}</ic> dict. Attacks that require mandatory params, like <ic>null_flood</ic> needing <ic>cols</ic>, must use the dict form.</td></tr>
-        <tr><td>health_check</td><td class="type">callable | None</td><td class="desc">Optional. See <a href="#health-check" style="color:var(--teal);">health_check</a> below. If omitted, all outcomes are <ic>UNKNOWN</ic>.</td></tr>
+        <tr><td>health_check</td><td class="type">callable | None</td><td class="desc">Optional. See <a href="#health-check" style="color:var(--teal-text);">health_check</a> below. If omitted, all outcomes are <ic>UNKNOWN</ic>.</td></tr>
       </table>
     </section>
 

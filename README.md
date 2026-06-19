@@ -1,6 +1,6 @@
 # havoc-monkey
 
-![HTML output of a havoc-monkey campaign report](docs/assets/html_report.png)
+![havoc-monkey](docs/assets/loop-horizontal-7s.gif)
 
 [![Tests](https://github.com/aitor1717/havoc-monkey/actions/workflows/test.yml/badge.svg)](https://github.com/aitor1717/havoc-monkey/actions/workflows/test.yml)
 [![PyPI](https://img.shields.io/pypi/v/havoc-monkey)](https://pypi.org/project/havoc-monkey/)
@@ -9,6 +9,8 @@
 > Deliberate failure injection for data pipelines.
 
 Pipelines fail silently. A renamed column, a batch of nulls, a late timestamp: none of these raise an exception, they just quietly corrupt your output. havoc-monkey applies the same idea as Chaos Monkey to data: a seeded, reproducible injector that breaks your pipeline's input on purpose, so you find the gaps before production does.
+
+This is not infrastructure chaos engineering: havoc-monkey never kills a process, severs a network link, or touches your deploy. It operates purely on in-memory DataFrames, applying the same instinct — break it on purpose, on a schedule you control — to the data your pipeline actually receives.
 
 Requires Python 3.9+.
 
@@ -37,6 +39,10 @@ report = monkey.campaign(
 print(report)
 ```
 
+## Demo
+
+![Terminal demo of a havoc-monkey campaign report](docs/assets/demo.svg)
+
 ## Attacks
 
 | Attack | What | Subtypes / Params |
@@ -49,6 +55,10 @@ print(report)
 | `temporal` | Out-of-order, late, future, missing-window, or duplicate timestamps. | see below |
 
 All attacks return `df.copy()`. The input DataFrame is never mutated.
+
+### Why not just use Hypothesis?
+
+Hypothesis fuzzes valid inputs to find bugs in your code. havoc-monkey breaks data your code already trusts, to find bugs in your assumptions about it. Complementary, not competing.
 
 ## Temporal Attacks
 

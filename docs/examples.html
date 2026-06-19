@@ -4,11 +4,22 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Examples · havoc-monkey</title>
+<meta name="description" content="Worked examples of havoc-monkey: campaigns, health checks, and the pytest plugin.">
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<meta property="og:title" content="Examples · havoc-monkey">
+<meta property="og:description" content="Worked examples: campaigns, health checks, and the pytest plugin.">
+<meta property="og:image" content="https://aitor1717.github.io/havoc-monkey/assets/loop-horizontal-7s.gif">
+<meta property="og:url" content="https://aitor1717.github.io/havoc-monkey/examples.html">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Examples · havoc-monkey">
+<meta name="twitter:description" content="Worked examples: campaigns, health checks, and the pytest plugin.">
+<meta name="twitter:image" content="https://aitor1717.github.io/havoc-monkey/assets/loop-horizontal-7s.gif">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root{
     --peach:#FBC990; --coral:#F9787C; --pink:#FA0A6C;
-    --teal:#14C2C4; --mint:#3DF2CC;
+    --teal:#14C2C4; --teal-text:#109698; --mint:#3DF2CC;
     --charcoal:#1E1E1E; --cream:#FFFBF5; --muted:#9E9A96;
     --sans:'Space Grotesk',sans-serif; --mono:'IBM Plex Mono',monospace;
     --code-kw:#6DF5D6; --code-str:#FBAAAC; --code-num:#FCD5A6; --code-cmt:#919190;
@@ -38,7 +49,7 @@
 
   .example{margin-bottom:72px;}
   .example-meta{display:flex;align-items:center;gap:14px;margin-bottom:18px;}
-  .example-num{font-family:var(--mono);font-size:11px;color:var(--teal);font-weight:600;letter-spacing:.15em;}
+  .example-num{font-family:var(--mono);font-size:11px;color:var(--teal-text);font-weight:600;letter-spacing:.15em;}
   .example h2{font-size:28px;font-weight:800;letter-spacing:-.02em;margin-bottom:8px;}
   .example .desc{font-size:15.5px;color:var(--muted);max-width:620px;margin-bottom:24px;line-height:1.65;}
   .example .outcome{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:12px;
@@ -57,7 +68,7 @@
   .teal-card-head{background:rgba(20,194,196,.12);border-bottom:1px solid rgba(61,242,204,.12);
     padding:13px 22px;display:flex;align-items:center;gap:8px;}
   .teal-card-head .bar{width:9px;height:9px;border-radius:50%;background:#2e2e2e;}
-  .teal-card-head .label{font-family:var(--mono);font-size:12px;color:var(--teal);margin-left:6px;letter-spacing:.04em;}
+  .teal-card-head .label{font-family:var(--mono);font-size:12px;color:var(--teal-text);margin-left:6px;letter-spacing:.04em;}
   .teal-card-body{padding:26px 32px;font-family:var(--mono);font-size:13px;line-height:1.85;overflow-x:auto;}
   .teal-card-body pre{color:#D4D0CB;}
   .teal-card-body .k{color:var(--code-kw);} .teal-card-body .s{color:var(--code-str);} .teal-card-body .c{color:var(--code-cmt);}

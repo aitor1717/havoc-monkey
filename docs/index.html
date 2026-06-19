@@ -3,7 +3,18 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>havoc-monkey</title>
+<title>havoc-monkey — Deliberate failure injection for data pipelines</title>
+<meta name="description" content="Controlled destruction for data pipelines. Reproducible attacks on your terms.">
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<meta property="og:title" content="havoc-monkey">
+<meta property="og:description" content="Controlled destruction for data pipelines. Reproducible attacks on your terms.">
+<meta property="og:image" content="https://aitor1717.github.io/havoc-monkey/assets/loop-horizontal-7s.gif">
+<meta property="og:url" content="https://aitor1717.github.io/havoc-monkey/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="havoc-monkey">
+<meta name="twitter:description" content="Controlled destruction for data pipelines. Reproducible attacks on your terms.">
+<meta name="twitter:image" content="https://aitor1717.github.io/havoc-monkey/assets/loop-horizontal-7s.gif">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root{
@@ -165,7 +176,7 @@
   <div style="max-width:760px;">
     <div class="section-label">Quickstart</div>
     <h2>Five lines to deliberate destruction</h2>
-    <p class="lead">Seed it, attack it, pass a health check: that's the whole API surface.</p>
+    <p class="lead">Seed it, attack it, pass a health check. That's the whole API surface.</p>
     <div class="dark-card"><pre><span class="c">from</span> havoc_monkey <span class="c">import</span> HavocMonkey
 
 monkey = HavocMonkey(seed=<span class="n">42</span>)
