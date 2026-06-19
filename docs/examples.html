@@ -30,10 +30,10 @@
   #dots{position:fixed;inset:0;pointer-events:none;z-index:0;}
 
   .nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;
-    padding:20px 60px;backdrop-filter:blur(16px);background:rgba(255,251,245,.75);}
-  .logo{font-weight:800;font-size:19px;letter-spacing:-.02em;text-decoration:none;color:var(--charcoal);}
+    padding:clamp(14px,3vw,20px) clamp(24px,6vw,60px);backdrop-filter:blur(16px);background:rgba(255,251,245,.75);}
+  .logo{font-weight:800;font-size:clamp(14px,3.6vw,19px);letter-spacing:-.02em;text-decoration:none;color:var(--charcoal);}
   .logo em{color:var(--pink);font-style:normal;}
-  .nav-links a{color:var(--charcoal);text-decoration:none;font-size:14px;font-weight:500;margin-left:28px;opacity:.6;}
+  .nav-links a{color:var(--charcoal);text-decoration:none;font-size:clamp(11px,2.6vw,14px);font-weight:500;margin-left:clamp(10px,2.4vw,28px);opacity:.6;}
   .nav-links a:hover,.nav-links a.active{opacity:1;}
 
   .page-header{position:relative;z-index:1;
@@ -87,7 +87,8 @@
   .social-icon svg{width:13px;height:13px;fill:currentColor;}
 
   @media(max-width:860px){
-    .nav,.page-header,main,footer{padding-left:24px;padding-right:24px;}
+    .page-header,main,footer{padding-left:24px;padding-right:24px;}
+    .page-header{padding-top:48px;padding-bottom:56px;}
     .page-header h1{font-size:36px;}
     footer{flex-direction:column;align-items:flex-start;}
   }
@@ -97,7 +98,7 @@
 <canvas id="dots"></canvas>
 
 <nav class="nav">
-  <a href="index.html" class="logo">havoc<em>-monkey</em></a>
+  <a href="index.html" class="logo">havoc-<em>monkey</em></a>
   <div class="nav-links">
     <a href="index.html">Home</a>
     <a href="examples.html" class="active">Examples</a>

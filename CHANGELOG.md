@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.0] - 2026-06-19
+
+First stable release. The public API (`HavocMonkey`, the six attacks, `campaign()`, `Report`, the pytest plugin, and the CLI) is considered settled; breaking changes will land behind a major version bump going forward.
+
+### Changed
+- PyPI classifier bumped from "4 - Beta" to "5 - Production/Stable"
+- README, docs site, and cover assets polished for launch (mobile layout fixes, lighter-weight cover GIF, unified nav styling across pages)
+- `sdist` build now excludes `docs/` (the GitHub Pages source and generated assets), which had been bloating the source distribution with files irrelevant to an installed package
+
 ## [0.9.0] - 2026-06-17
 
 Signals production-readiness: builds on 0.1.2's type-checking, 100% coverage, and widened CI matrix.
