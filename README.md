@@ -10,7 +10,7 @@
 
 Pipelines fail silently. A renamed column, a batch of nulls, a late timestamp: none of these raise an exception, they just quietly corrupt your output. havoc-monkey applies the same idea as Chaos Monkey to data: a seeded, reproducible injector that breaks your pipeline's input on purpose, so you find the gaps before production does.
 
-This is not infrastructure chaos engineering: havoc-monkey never kills a process, severs a network link, or touches your deploy. It operates purely on in-memory DataFrames, applying the same instinct — break it on purpose, on a schedule you control — to the data your pipeline actually receives.
+This is not infrastructure chaos engineering: havoc-monkey never kills a process, severs a network link, or touches your deploy. It operates purely on in-memory DataFrames, applying the same instinct to the data your pipeline actually receives. Break it on purpose, on a schedule you control.
 
 Requires Python 3.9+.
 
