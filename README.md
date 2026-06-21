@@ -11,7 +11,7 @@
 [![PyPI](https://img.shields.io/pypi/v/havoc-monkey)](https://pypi.org/project/havoc-monkey/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-### Data failure injection.
+### Data failure injection
 
 Pipelines fail silently. A renamed column, a batch of nulls, a late timestamp: none of these raise an exception, they just quietly corrupt your output. havoc-monkey applies the same idea as Chaos Monkey to data: a seeded, reproducible injector that breaks your pipeline's input on purpose, so you find the gaps before production does.
 
