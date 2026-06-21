@@ -352,8 +352,9 @@ def render(balls, state: State, rect_havoc, rect_monkey, title_pos, f_title, w_h
     return base.convert("RGB")
 
 
-def main(n_frames=140, frame_ms=50, out_name="mockup_membrane.gif", seed=11, settle_frames=10,
-         palette_colors=28, canvas=None, density_scale=1.0, max_balls=420, **overrides):
+def main(n_frames=140, frame_ms=50, out_name="mockup_membrane.gif", webp_out_name=None, seed=11,
+         settle_frames=10, palette_colors=28, canvas=None, density_scale=1.0, max_balls=420,
+         **overrides):
     for k, v in overrides.items():
         globals()[k] = v
     if canvas is not None:
@@ -406,6 +407,19 @@ def main(n_frames=140, frame_ms=50, out_name="mockup_membrane.gif", seed=11, set
     out = HERE / out_name
     frames[0].save(out, save_all=True, append_images=frames[1:], duration=frame_ms, loop=0, optimize=True)
     print(f"wrote {out}  {len(frames)} frames  flips={flip_count}")
+
+    if webp_out_name:
+        # Skip the 256-color GIF palette entirely: libwebp's own lossy
+        # compression handles the gradient glows natively, so this comes out
+        # both higher-fidelity and a fraction of the GIF's size, which is what
+        # actually fixes mobile choppiness (less to decode every loop).
+        webp_out = HERE / webp_out_name
+        raw_frames[0].save(
+            webp_out, save_all=True, append_images=raw_frames[1:],
+            duration=frame_ms, loop=0, quality=82, method=6, minimize_size=True,
+        )
+        print(f"wrote {webp_out}  {len(raw_frames)} frames  {webp_out.stat().st_size} bytes")
+
     return frames
 
 
