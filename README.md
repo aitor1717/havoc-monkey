@@ -2,7 +2,7 @@
 
 <p align="center">
   <picture>
-    <source media="(max-width: 700px)" srcset="docs/assets/loop-horizontal-7s-mobile.gif">
+    <source media="(max-width: 700px)" srcset="docs/assets/loop-horizontal-7s-mobile.png">
     <img src="docs/assets/loop-horizontal-7s.gif" alt="havoc-monkey">
   </picture>
 </p>
