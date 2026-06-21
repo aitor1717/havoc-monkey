@@ -1,6 +1,6 @@
 # havoc-monkey
 
-![havoc-monkey](docs/assets/loop-horizontal-7s.webp)
+<p align="center"><img src="docs/assets/loop-horizontal-7s.gif" alt="havoc-monkey"></p>
 
 [![Tests](https://github.com/aitor1717/havoc-monkey/actions/workflows/test.yml/badge.svg)](https://github.com/aitor1717/havoc-monkey/actions/workflows/test.yml)
 [![PyPI](https://img.shields.io/pypi/v/havoc-monkey)](https://pypi.org/project/havoc-monkey/)
